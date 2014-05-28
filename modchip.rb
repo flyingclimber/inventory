@@ -3,7 +3,8 @@ require 'nokogiri'
 require 'open-uri'
 
 item_url =
-  'http://www.segastyle.com/store/index.php?route=product/product&product_id=76'
+  'http://www.segastyle.com/store/index.php?' \
+    'route=product/product&product_id=76'
 
 page = Nokogiri::HTML(open(item_url))
 
