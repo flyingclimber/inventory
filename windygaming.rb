@@ -30,6 +30,6 @@ my_hash = {:"1" => buffer[0]["title"],
 
 json = JSON.pretty_generate(my_hash)
 
-File.open('stock',"w") do |f|
+File.open(stock_file, "w") do |f|
     f.write(json)
 end
