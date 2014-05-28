@@ -1,7 +1,7 @@
 #!/usr/bin/ruby
 
 =begin
-    segastyle.rb - Checks for new items on windygaming.com
+    segastyle.rb - Checks for new items on segastyle.com
 
     Copyright (C) 2014, Tomasz Finc <tomasz@gmail.com>
 
