@@ -7,11 +7,11 @@ require 'json'
 
 stock_file = 'stock'
 windy_url = 'http://www.windygaming.com'
-windy_new = 'http://www.windygaming.com/collections/newest-items'
+windy_new = '/collections/newest-items'
 
 stock = JSON.parse(IO.read(stock_file)) if File.file?(stock_file)
 
-page = Nokogiri::HTML(open(windy_new))
+page = Nokogiri::HTML(open(windy_url + windy_new))
 
 buffer = page.css('div.product-grid-item a')
 if stock
