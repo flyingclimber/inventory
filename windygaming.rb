@@ -34,6 +34,7 @@ stock = JSON.parse(IO.read(stock_file)) if File.file?(stock_file)
 page = Nokogiri::HTML(open(windy_url + windy_new))
 
 buffer = page.css('div.product-grid-item a')
+
 if stock
   if stock['1'] != buffer[0]['title'] ||
      stock['2'] != buffer[2]['title'] ||
