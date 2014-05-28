@@ -8,13 +8,12 @@ windy_url = "http://www.windygaming.com"
 
 if File.file?(stock_file)
     stock = JSON.parse(IO.read(stock_file))
-    found_stock = true
 end
 
 page = Nokogiri::HTML(open("http://www.windygaming.com/collections/newest-items")) 
 
 buffer = page.css('div.product-grid-item a')
-if found_stock
+if stock
     if stock["1"] != buffer[0]["title"] or
         stock["2"] != buffer[2]["title"] or
         stock["3"] != buffer[4]["title"]
