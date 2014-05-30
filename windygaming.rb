@@ -28,31 +28,32 @@ require 'json'
 stock_file = 'stock'
 windy_url = 'http://www.windygaming.com'
 windy_new = '/collections/newest-items'
-found = 0
+threshold = 6
 
 stock = JSON.parse(IO.read(stock_file)) if File.file?(stock_file)
 
 page = Nokogiri::HTML(open(windy_url + windy_new))
 
-buffer = page.css('div.product-grid-item a')
+buffer = page.css("a[class=product-link]")
 
 if stock
+  found = 0
   (0..10).each do |i|
-    if stock[i * 2] != buffer[i * 2]['title'] # HACK; should be stock[i]
+    if stock[i] != buffer[i]['title']
       found += 1
     end
   end
-  if found >= 6
+  if found >= threshold
     puts "New Items Found!\n\n"
     (0..10).each do |i|
-      puts buffer[i * 2]['title'], windy_url + buffer[i * 2]['href'], "\n"
+      puts buffer[i], windy_url + buffer[i]['href'], "\n"
     end
   end
 end
 
 my_array = []
 
-(0..20).each do |i|
+(0..10).each do |i|
   my_array[i] = buffer[i]['title']
 end
 
