@@ -29,6 +29,8 @@ stock_file = 'stock'
 windy_url = 'http://www.windygaming.com'
 windy_new = '/collections/newest-items'
 threshold = 6
+items_total = 10
+items_start = 0
 
 stock = JSON.parse(IO.read(stock_file)) if File.file?(stock_file)
 
@@ -38,22 +40,22 @@ buffer = page.css("a[class=product-link]")
 
 if stock
   found = 0
-  (0..10).each do |i|
+  (items_start..items_total).each do |i|
     if stock[i] != buffer[i]['title']
       found += 1
     end
   end
   if found >= threshold
     puts "New Items Found!\n\n"
-    (0..10).each do |i|
-      puts buffer[i], windy_url + buffer[i]['href'], "\n"
+    (items_start..items_total).each do |i|
+      puts buffer[i]['title'], windy_url + buffer[i]['href'], "\n"
     end
   end
 end
 
 my_array = []
 
-(0..10).each do |i|
+(items_start..items_total).each do |i|
   my_array[i] = buffer[i]['title']
 end
 
