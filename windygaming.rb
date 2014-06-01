@@ -25,42 +25,56 @@ require 'nokogiri'
 require 'open-uri'
 require 'json'
 
-stock_file = 'stock'
-windy_url = 'http://www.windygaming.com'
-windy_new = '/collections/newest-items'
-threshold = 6
-items_total = 10
-items_start = 0
+STOCKFILE = 'stock'
+WINDYURL = 'http://www.windygaming.com'
+WINDYNEW = '/collections/newest-items'
+THRESHOLD = 1
+ITEMSTOTAL = 10
+ITEMSSTART = 0
 
-stock = JSON.parse(IO.read(stock_file)) if File.file?(stock_file)
+stock = JSON.parse(IO.read(STOCKFILE)) if File.file?(STOCKFILE)
 
-page = Nokogiri::HTML(open(windy_url + windy_new))
+page = Nokogiri::HTML(open(WINDYURL + WINDYNEW))
 
 buffer = page.css("a[class=product-link]")
 
+def write_stock_file(objectToWrite)
+  json = JSON.generate(objectToWrite)
+  File.open(STOCKFILE, 'w') do |f|
+    f.write(json)
+  end
+end
+
+def append_stock_file(stock_to_add, stock_file)
+  stock_to_add.each do |i|
+    stock_file.push(i)
+  end
+end
+
 if stock
-  found = 0
-  (items_start..items_total).each do |i|
-    if stock[i] != buffer[i]['title']
-      found += 1
+  new_items = []
+  (ITEMSSTART..ITEMSTOTAL).each do |i|
+    if not stock.include? buffer[i]['title']
+      new_items << i
     end
   end
-  if found >= threshold
-    puts "New Items Found!\n\n"
-    (items_start..items_total).each do |i|
-      puts buffer[i]['title'], windy_url + buffer[i]['href'], "\n"
+  if new_items.count >= THRESHOLD
+    item_list = []
+    new_items.each do |i|
+      puts buffer[i]['title'],
+           WINDYURL + buffer[i]['href'], "\n"
+      item_list << buffer[i]['title']
     end
+    append_stock_file(item_list, stock)
+    write_stock_file(stock)
   end
-end
-
-my_array = []
-
-(items_start..items_total).each do |i|
-  my_array[i] = buffer[i]['title']
-end
-
-json = JSON.generate(my_array)
-
-File.open(stock_file, 'w') do |f|
-  f.write(json)
+else
+  item_list = []
+  puts "First run so everything is new!\n\n"
+  (ITEMSSTART..ITEMSTOTAL).each do |i|
+    puts buffer[i]['title'],
+         WINDYURL + buffer[i]['href'], "\n"
+    item_list[i] = buffer[i]['title']
+  end
+  write_stock_file(item_list)
 end
