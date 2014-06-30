@@ -38,6 +38,8 @@ page = Nokogiri::HTML(open(WINDYURL + WINDYNEW))
 
 buffer = page.css('a[class=product-link]')
 
+abort('Aborting due to lack of data') if buffer.empty?
+
 def write_stock_file(objectToWrite)
   json = JSON.generate(objectToWrite)
   File.open(STOCKFILE, 'w') do |f|
