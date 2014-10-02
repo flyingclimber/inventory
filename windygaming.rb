@@ -59,6 +59,7 @@ if stock
     new_items << i unless stock.include? buffer[i]['title']
   end
   if new_items.count >= THRESHOLD
+    puts WINDYURL + WINDYNEW + "\n\n"
     item_list = []
     new_items.each do |i|
       puts buffer[i]['title'],
