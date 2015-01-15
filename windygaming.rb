@@ -36,7 +36,9 @@ stock = JSON.parse(IO.read(STOCKFILE)) if File.file?(STOCKFILE)
 
 page = Nokogiri::HTML(open(WINDYURL + WINDYNEW))
 
-buffer = page.css("a[class=product-link]")
+buffer = page.css('a[class=product-link]')
+
+abort('Aborting due to lack of data') if buffer.empty?
 
 def write_stock_file(objectToWrite)
   json = JSON.generate(objectToWrite)
@@ -54,11 +56,10 @@ end
 if stock
   new_items = []
   (ITEMSSTART..ITEMSTOTAL).each do |i|
-    if not stock.include? buffer[i]['title']
-      new_items << i
-    end
+    new_items << i unless stock.include? buffer[i]['title']
   end
   if new_items.count >= THRESHOLD
+    puts WINDYURL + WINDYNEW + "\n\n"
     item_list = []
     new_items.each do |i|
       puts buffer[i]['title'],
