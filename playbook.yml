@@ -1,0 +1,24 @@
+---
+- hosts: webserver
+  tasks:
+    - name: Install Ruby
+      apt: name=ruby
+
+    - name: Install GIT
+      apt: name=git
+
+    - name: Install Nokogiri
+      gem: name=nokogiri state=latest
+
+    - name: Install Json
+      gem: name=json state=latest
+
+    - group: name=crontab state=present
+      become: yes
+      become_method: sudo
+
+    - user: name=inventory comment="Inventory user" group=crontab shell=/bin/false
+      become: yes
+      become_method: sudo
+
+    - cron: name="Install Windy Cron" minute="*/20" job="/home/inventory/inventory/windygaming.rb"
